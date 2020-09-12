@@ -1,5 +1,5 @@
 //Create variables here
-var dog,happyDogImage,dogImage,database,foodS,foodStock,bark,nom;
+var dog,happyDogImage,dogImage,database,foodS,foodStock,bark,nom,timer2;
 var timer = null;
 
 function preload()
@@ -34,18 +34,24 @@ function setup() {
   background("rgb(46,139,87)")
   drawSprites();
   textSize(30)
-  fill("white")
+  fill("white");
   text("Biscuit packs left : " + foodS,20,50);
   text("Press the up arrow to feed the dog biscuits !",660,50)
   //add styles here
-  if(keyWentDown(UP_ARROW)&&foodS > 0){
+  if(keyWentDown(UP_ARROW)){
+    if(foodS != 0){
+      nom.play();
+      dog.addImage(happyDogImage);
+      }
     writeStock(foodS);
     timer = 60;
-    nom.play();
     
   }
   if(timer > 0){
-    dog.addImage(happyDogImage);
+    if (foodS != 0) {
+      
+      
+    }
     timer = timer - 1
   }else{
     dog.addImage(dogImage);
@@ -54,8 +60,11 @@ function setup() {
   if(timer === 1){
     bark.play();
   }
-
-}
+  if(timer2 < 0){
+  timer2 = timer2 - 1;
+  
+  }
+  }
 
 function readStock(dat){ 
   //console.log(data.val());
@@ -63,12 +72,25 @@ function readStock(dat){
   console.log(foodS);
 }
 function writeStock(x){
-  if(x >= -1){
+  if(x >= 1){
     x = x - 1;
+  }else{
+    database.ref("/").set({
+      Food:20
+    })
+    x = 20;
+   // for (var a = 0; a < 10000; a++) {
+      fill("black");
+      textSize(200);
+      text("Refilling...",250,250);
+      
+  //  }
+    //text("Refilling...",300,200);
+   
+    timer2 = 600
   }
-
+  
   database.ref("/").set({
     Food:x
   })
 }
- 
